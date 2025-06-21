@@ -1,0 +1,11 @@
+Machine_ID,Machine_Type,Installation_Year,Operational_Hours,Temperature_C,Vibration_mms,Sound_dB,Oil_Level_pct,Coolant_Level_pct,Power_Consumption_kW,Last_Maintenance_Days_Ago,Maintenance_History_Count,Failure_History_Count,AI_Supervision,Error_Codes_Last_30_Days,Remaining_Useful_Life_days,Laser_Intensity,Hydraulic_Pressure_bar,Coolant_Flow_L_min,Heat_Index,AI_Override_Events
+MC_242806,Compressor,2019,99523,55.74,8.3,87.77,87.01,21.61,99.1,97,5,3,False,4,0.0,,,,,0
+MC_439562,Injection_Molder,2019,83348,73.0,10.59,82.41,55.95,67.84,124.64,282,2,4,False,3,0.0,,141.21,,,0
+MC_336946,Boiler,2007,98192,69.94,3.61,69.08,37.22,57.61,42.98,238,5,2,False,2,0.0,,,,522.46,0
+MC_082883,Laser_Cutter,2040,96164,44.64,14.24,84.73,41.11,81.14,186.75,0,3,1,False,1,0.0,73.52,,,,0
+MC_355755,Pick_and_Place,2015,98456,82.89,8.63,80.69,60.61,62.84,11.28,285,6,0,True,5,0.0,,,,,1
+MC_086992,Pump,2027,22692,59.45,2.23,71.34,50.77,87.78,179.48,56,6,5,True,4,636.0,,,,,1
+MC_218389,CNC_Mill,2001,57878,62.77,9.82,71.62,61.18,40.46,-39.32,241,10,3,False,2,349.0,,,46.46,,0
+MC_178207,CNC_Mill,2024,79879,65.35,11.99,56.06,87.44,77.07,160.9,349,5,3,False,2,203.0,,,23.06,,0
+MC_189437,Valve_Controller,2007,23669,48.51,6.13,81.46,56.6,100.0,57.77,351,4,4,True,4,728.0,,,,,2
+MC_105963,Shuttle_System,2023,91045,56.69,12.71,82.86,76.95,96.07,108.13,219,2,1,False,2,76.0,,,,,0
