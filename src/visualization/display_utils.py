@@ -15,8 +15,9 @@ import streamlit as st
 
 from core.model_utils import (load_model, load_scaler, predict_batch,
                               predict_single)
-from settings.config import (FEATURE_KEYS, FEATURE_LABELS, MODEL_PATH,
-                             SCALER_PATH, TABS)
+from settings.config import (DISPLAY_ICON, DISPLAY_TABS, DISPLAY_TITLE,
+                             FEATURE_KEYS, FEATURE_LABELS, MODEL_PATH,
+                             SCALER_PATH)
 
 
 def display_set_cfg():
@@ -25,19 +26,20 @@ def display_set_cfg():
 
     Sets the page title, icon, and layout style for the SensorGuard application.
     Also renders a header banner to provide consistent context throughout the application.
-
-    Configuration includes:
-    - Page title: 'SensorGuard'
-    - Favicon icon: Shield emoji
-    - Layout: Centered
     """
-    st.set_page_config(page_title="SensorGuard", page_icon="🛡️", layout="centered")
-
-    # Banner header (applies globally if function is reused at the top of each tab)
-    st.markdown(
-        "<h1 style='text-align: center; color: #1f77b4;'>🛡️ SensorGuard – Industrial Failure Prediction</h1>",
-        unsafe_allow_html=True,
+    st.set_page_config(
+        page_title=DISPLAY_TITLE, page_icon=DISPLAY_ICON, layout="centered"
     )
+
+    # Banner header (applies globally)
+    title = (
+        "<h1 style='text-align: center; color: #1f77b4;'>"
+        + DISPLAY_ICON
+        + " "
+        + DISPLAY_TITLE
+        + "<br><br>Industrial Failure Prediction<br></h1>"
+    )
+    st.markdown(title, unsafe_allow_html=True)
 
 
 def display_create_sidebar():
@@ -52,27 +54,72 @@ def display_create_sidebar():
     """
 
     # Stylized sidebar header
-    st.sidebar.markdown(
-        "<h2 style='color:#1f77b4; margin-bottom: 0;'>🛠️ SensorGuard</h2>",
-        unsafe_allow_html=True,
+    h2_line = (
+        "<h2 style='color:#1f77b4; margin-bottom: 0;'>"
+        + DISPLAY_ICON
+        + " "
+        + DISPLAY_TITLE
+        + "</h2>"
     )
+    st.sidebar.markdown(h2_line, unsafe_allow_html=True)
     st.sidebar.markdown(
         "<p style='margin-top: 0; font-size: 0.9em;'>Industrial Failure Prediction Tool</p>",
         unsafe_allow_html=True,
     )
 
     # Navigation radio button
-    selection = st.sidebar.radio("📁 Choose a section:", TABS)
+    selection = st.sidebar.radio("📁 Choose a section:", DISPLAY_TABS)
 
     return selection
 
 
 def display_about():
-    """Display about section."""
-    st.title("📊 SensorGuard - Predictive Maintenance")
+    """
+    Display the About section of the SensorGuard application.
+
+    Provides an overview of the project, its purpose, use cases, and technical approach.
+    """
+    line = "📊 " + DISPLAY_TITLE + " - Predictive Maintenance Intelligence"
+    st.title(line)
+
     st.markdown(
-        "SensorGuard uses machine learning to predict if a machine is at risk of failing within 7 days "
-        "based on operational and sensor data. Models are trained on labeled historical records."
+        """
+        ### 🛡️ Empowering Industrial Safety Through Data
+
+        SensorGuard is a **predictive maintenance tool** designed to forecast equipment failures
+        within the next **7 days** using real-time sensor data and operational metrics.
+
+        ---
+        """
+    )
+
+    st.subheader("🎯 Project Objective")
+    st.markdown(
+        """
+        The core goal of SensorGuard is to **reduce unplanned downtime**, **optimize maintenance costs**,
+        and **improve equipment reliability** through smart analytics powered by machine learning.
+        """
+    )
+
+    st.subheader("🔍 What We Predict")
+    st.markdown(
+        """
+        Based on features such as:
+        - **Operational Hours**
+        - **Temperature (°C)**
+        - **Vibration (mm/s)**
+
+        SensorGuard classifies whether a machine is likely to **fail within the next 7 hours**.
+        """
+    )
+
+    st.subheader("🏭 Example Use Cases")
+    st.markdown(
+        """
+        - Real-time monitoring of industrial assets
+        - Smart scheduling of preventive maintenance
+        - Root cause analysis of frequent breakdowns
+        """
     )
 
 
@@ -136,50 +183,64 @@ def display_single_input(model, scaler):
 
 def display_batch_input(model, scaler):
     """
-    Interface for batch prediction via CSV upload, scaler
+    Display the batch prediction interface for CSV input in the Streamlit app.
+
+    This function allows users to upload a CSV file, validates required columns,
+    applies feature scaling, makes batch predictions, and displays the results
+    in both tabular and pie chart form.
 
     Args:
         model: Trained classification model.
-        scaler: Trained StandardScaler.
+        scaler: Trained StandardScaler used during training.
     """
     st.header("📂 Predict from CSV File")
 
     uploaded_file = st.file_uploader(
-        "Upload a CSV file containing the correct features", type="csv"
+        "Upload a CSV file containing the required features", type="csv"
     )
 
     if uploaded_file:
         try:
-            # Read CSV file
             df = pd.read_csv(uploaded_file)
 
-            # Check that all required columns are present
-            if not all(key in df.columns for key in FEATURE_KEYS):
-                st.error(
-                    "❌ CSV must contain the following columns:\n"
-                    + ", ".join(FEATURE_KEYS)
-                )
+            # Validate required features
+            missing_cols = [key for key in FEATURE_KEYS if key not in df.columns]
+            if missing_cols:
+                st.error(f"❌ Missing required columns: {', '.join(missing_cols)}")
                 return
 
-            # Keep only required features and in the correct order
+            # Run predictions
             df_input = df[FEATURE_KEYS]
-
-            # Make predictions
             predictions = predict_batch(model, scaler, df_input)
 
-            # Add prediction column
-            df["Prediction"] = [
-                "⚠️ Failure within 7H" if pred else "✔️ No Failure within 7H"
-                for pred in predictions
+            # Create output DataFrame
+            result_df = pd.DataFrame()
+            if "Machine_ID" in df.columns:
+                result_df["Machine_ID"] = df["Machine_ID"]
+
+            for key in FEATURE_KEYS:
+                result_df[key] = df[key]
+
+            result_df["Failure within 7H"] = [
+                "⚠️ Failure" if pred else "✔️ Functional" for pred in predictions
             ]
 
-            # Display results
+            # Display predictions
             st.success("✅ Predictions completed!")
-            st.dataframe(df)
+            st.dataframe(result_df)
 
-            # Show a pie chart of prediction distribution
+            # Download link for results
+            csv_data = result_df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="⬇️ Download predictions as CSV",
+                data=csv_data,
+                file_name="batch_predictions.csv",
+                mime="text/csv",
+            )
+
+            # Pie chart visualization
             result_counts = pd.Series(predictions).value_counts().sort_index()
-            labels = ["No Failure", "Failure"]
+            labels = ["Functional", "Failure"]
             values = [result_counts.get(0, 0), result_counts.get(1, 0)]
 
             fig, ax = plt.subplots()
@@ -192,19 +253,28 @@ def display_batch_input(model, scaler):
             )
             ax.axis("equal")
             st.pyplot(fig)
+            plt.close(fig)
 
         except Exception as e:
-            st.error(f"❌ Error processing the file:\n{e}")
+            st.error(f"❌ Error processing the file:\n\n{str(e)}")
 
 
 def display_libraries():
-    """Display used libraries."""
+    """
+    Display the list of libraries used in the project, with a short description and license link.
+    """
     st.header("📚 Libraries Used")
+
     st.markdown(
         """
-    - [Streamlit](https://streamlit.io/)
-    - [scikit-learn](https://scikit-learn.org/)
-    - [pandas](https://pandas.pydata.org/)
-    - [joblib](https://joblib.readthedocs.io/)
-    """
+        - 🖼️ [**Streamlit**](https://streamlit.io/): Interactive web app framework for building beautiful data-driven dashboards in Python.
+        - 🤖 [**scikit-learn**](https://scikit-learn.org/): Core machine learning library used for model training, evaluation, and preprocessing (Logistic Regression, SVM, GridSearch...).
+        - 🧮 [**pandas**](https://pandas.pydata.org/): Powerful data analysis library for manipulating and cleaning structured datasets (e.g., CSV files).
+        - 📊 [**Matplotlib**](https://matplotlib.org/): Visualization library for generating ROC curves, confusion matrices, and performance charts.
+        - 💾 [**joblib**](https://joblib.readthedocs.io/): Model serialization tool used to save/load trained models and scalers efficiently.
+
+        ---
+
+        🔓 **License**: This project is released under the [MIT License](https://opensource.org/licenses/MIT), allowing free usage, modification, and distribution.
+        """
     )

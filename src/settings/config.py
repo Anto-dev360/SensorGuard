@@ -20,7 +20,9 @@ MODEL_PATH = os.path.join(
 SCALER_PATH = os.path.join(PROJECT_ROOT, "models", "scaler.pkl")
 
 # UI constants
-TABS = ["🔍 About", "📈 Predict One", "📂 Predict Batch", "📚 Libraries"]
+DISPLAY_TABS = ["🔍 About", "📈 Predict One", "📂 Predict Batch", "📚 Libraries"]
+DISPLAY_ICON = "🛡️"
+DISPLAY_TITLE = "SensorGuard"
 
 # Model constants
 FEATURE_LABELS = ["Operational Hours", "Temperature (°C)", "Vibration (mm/s)"]

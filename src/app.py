@@ -9,6 +9,7 @@ Project: SensorGuard
 License: MIT
 """
 
+from settings.config import DISPLAY_TABS
 from visualization.display_utils import (display_about, display_batch_input,
                                          display_create_sidebar,
                                          display_libraries, display_load_model,
@@ -39,13 +40,17 @@ def main():
     selection = display_create_sidebar()
 
     # Render the selected page based on user navigation
-    if selection == "🔍 About":
+    if selection == DISPLAY_TABS[0]:
+        # Main page
         display_about()
-    elif selection == "📈 Predict One":
+    elif selection == DISPLAY_TABS[1]:
+        # Submit one sample
         display_single_input(model, scaler)
-    elif selection == "📂 Predict Batch":
+    elif selection == DISPLAY_TABS[2]:
+        # Submit a CSV file containing several samples
         display_batch_input(model, scaler)
-    elif selection == "📚 Libraries":
+    elif selection == DISPLAY_TABS[3]:
+        # List of embedded libraries
         display_libraries()
 
 

@@ -17,7 +17,7 @@ import pandas as pd
 from settings.config import FEATURE_KEYS
 
 
-def load_model(model_path):
+def load_model(model_path: str):
     """
     Load the trained machine learning model from a specified path.
 
@@ -25,7 +25,7 @@ def load_model(model_path):
         model_path (str): Path to the serialized model file.
 
     Returns:
-        model (sklearn.base.BaseEstimator): Loaded model object.
+        model: Loaded model object.
 
     Raises:
         FileNotFoundError: If the file at model_path does not exist.
@@ -41,7 +41,7 @@ def load_model(model_path):
         raise RuntimeError(f"Failed to load model: {e}")
 
 
-def load_scaler(scaler_path):
+def load_scaler(scaler_path: str):
     """
     Load a serialized scaler object from the specified file path.
 
@@ -49,7 +49,7 @@ def load_scaler(scaler_path):
         scaler_path (str): The file path to the saved scaler (e.g., a .pkl file).
 
     Returns:
-        sklearn.preprocessing.StandardScaler: The deserialized scaler object used for feature normalization.
+        scaler: The deserialized scaler object used for feature normalization.
 
     Raises:
         FileNotFoundError: If the scaler file does not exist at the given path.
@@ -100,7 +100,6 @@ def predict_batch(model, scaler, df: pd.DataFrame) -> list:
     Returns:
         list: Binary prediction results (0 or 1).
     """
-    # Ensure feature order consistency
-    values = df[FEATURE_KEYS].values  # Extract as numpy array
+    values = df[FEATURE_KEYS].values
     values_scaled = scaler.transform(values)
     return model.predict(values_scaled).tolist()
