@@ -261,7 +261,7 @@ def display_batch_input(model, scaler):
 
 def display_libraries():
     """
-    Display the list of libraries used in the project, with a short description and license link.
+    Display the list of libraries/frameworks used in the project, with a short description and license link.
     """
     st.header("📚 Libraries Used")
 

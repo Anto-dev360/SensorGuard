@@ -15,7 +15,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
 MODEL_PATH = os.path.join(
-    PROJECT_ROOT, "models", "failure_predictor_logistic_regression.pkl"
+    PROJECT_ROOT, "models", "failure_predictor_support_vector_machine.pkl"
 )
 SCALER_PATH = os.path.join(PROJECT_ROOT, "models", "scaler.pkl")
 

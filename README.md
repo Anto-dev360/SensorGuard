@@ -1,7 +1,7 @@
 
-# 🚧 SensorGuard
+# 🛡️ SensorGuard
 
-**SensorGuard** is a machine learning project designed to predict industrial machine failures within 7 days, using real-time sensor data. The objective is to enhance preventive maintenance, reduce unplanned downtimes, and increase operational efficiency.
+**SensorGuard** is a machine learning pipeline designed to predict industrial machine failures within 7 days, using real-time sensor data. The objective is to enhance preventive maintenance, reduce unplanned downtimes, and increase operational efficiency.
 
 ---
 
@@ -18,13 +18,15 @@ Using a labeled dataset simulating factory conditions in 2040, the project lever
 - Feature correlation and selection
 - Model training with:
   - **Logistic Regression**
+  - **SVM (Support Vector Machine)**
   - **Random Forest**
 - Evaluation via:
   - Classification report
   - Confusion matrix
   - ROC AUC Curve
-- ✅ Best model selection and export to `.pkl`
-- 📊 Streamlit front-end for single and batch prediction
+- ✅ Best model selection based on class 1 recall
+- 💾 Export of trained model and scaler to `.pkl`
+- 📊 Streamlit interface for single and batch predictions
 
 ---
 
@@ -34,11 +36,11 @@ Using a labeled dataset simulating factory conditions in 2040, the project lever
 SensorGuard/
 ├── data/
 │   └── factory_sensor_simulator_2040.csv      # Main dataset
-├── models/                                    # Trained model
-│   ├── failure_predictor_logistic_regression.pkl
+├── models/                                    # Trained model and its scaler
+│   ├── failure_predictor_support_vector_machine.pkl
 |   └── scaler.pkl
 ├── notebooks/
-│   └── modeling_failure_prediction.ipynb      # Full ML workflow
+│   └── modeling_failure_prediction.ipynb      # Full pipeline: cleaning, training, and model saving
 ├── src/
 │   ├── app.py                                 # Streamlit entrypoint
 │   ├── core/
@@ -47,9 +49,11 @@ SensorGuard/
 │   │   └── config.py                          # Global constants
 │   ├── visualization/
 │   │   └── display_utils.py                   # Streamlit UI handlers
-|── test                                       # Example to test application
-|   ├── sample_input.csv
-|   └── sample_input.pdf
+├── tests                                      # Example to test application
+│   ├── sample_input.csv
+│   └── sample_input.pdf
+├── results                                    # Outputs generated after test runs
+│   └── batch_predictions.csv
 ├── LICENSE
 ├── requirements.txt
 ├── README.md
@@ -61,16 +65,16 @@ SensorGuard/
 ## 📚 Dataset Description
 
 **File:** `factory_sensor_simulator_2040.csv`
-**Records:** 120,000
-**Label:** `Failure_Within_7_Days` (Boolean)
+**Rows:** 120,000
+**Target:** `Failure_Within_7_Days` (binary label)
 
-**Selected Features:**
+**Selected Input Features:**
 
-| Feature               | Description                               |
-|------------------------|-------------------------------------------|
-| `Operational_Hours`    | Total machine operating hours             |
-| `Temperature_C`        | Measured temperature (Celsius)            |
-| `Vibration_mms`        | Machine vibration in mm/s                 |
+| Feature               | Description                           |
+|------------------------|---------------------------------------|
+| `Operational_Hours`    | Total machine operating hours         |
+| `Temperature_C`        | Measured temperature in Celsius       |
+| `Vibration_mms`        | Machine vibration in mm/s             |
 
 ---
 
@@ -109,7 +113,7 @@ streamlit run app.py
 
 ---
 
-## ⚙️ Strealmit application features
+## ⚙️ Streamlit Application Features
 
 ### 🔎 Manual Input
 
@@ -122,8 +126,9 @@ streamlit run app.py
 
 ### 🧪 Model
 
-- Logistic Regression with threshold tuning
-- Scalable for deployment and monitoring
+- Tuned SVM with probability calibration and threshold analysis
+- Optimized via GridSearchCV (C, kernel)
+- Designed for real-time scoring and easy deployment
 
 ---
 
