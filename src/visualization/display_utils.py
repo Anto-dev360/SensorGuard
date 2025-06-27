@@ -255,6 +255,15 @@ def display_batch_input(model, scaler):
             st.pyplot(fig)
             plt.close(fig)
 
+            # Compare predictions with ground truth if available
+            if "Failure_Within_7_Days" in df.columns:
+                try:
+                    true_labels = df["Failure_Within_7_Days"].astype(bool).astype(int)
+                    accuracy = (predictions == true_labels).mean()
+                    st.info(f"🧪 Prediction accuracy on provided labels: **{accuracy:.2%}**")
+                except Exception as e:
+                    st.warning(f"⚠️ Unable to compute accuracy: {str(e)}")
+
         except Exception as e:
             st.error(f"❌ Error processing the file:\n\n{str(e)}")
 
