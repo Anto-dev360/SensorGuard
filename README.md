@@ -9,7 +9,6 @@
 
 Using a labeled dataset simulating factory conditions in 2040, the project leverages environmental and operational sensor readings (e.g. temperature, vibration, power consumption) to classify whether a failure will occur in the next 7 days.
 
----
 
 ## 🧠 Model Pipeline
 
@@ -28,7 +27,6 @@ Using a labeled dataset simulating factory conditions in 2040, the project lever
 - 💾 Export of trained model and scaler to `.pkl`
 - 📊 Streamlit interface for single and batch predictions
 
----
 
 ## 📁 Project Structure
 
@@ -60,7 +58,6 @@ SensorGuard/
 └── .gitignore
 ```
 
----
 
 ## 📚 Dataset Description
 
@@ -76,7 +73,35 @@ SensorGuard/
 | `Temperature_C`        | Measured temperature in Celsius       |
 | `Vibration_mms`        | Machine vibration in mm/s             |
 
----
+Additional sensor features are explored in the notebook but only the most impactful ones are retained in the final model.
+
+
+## 📓 Notebook Overview: `modeling_failure_prediction.ipynb`
+
+This Jupyter notebook contains the complete machine learning workflow, from raw data preprocessing to model export. It serves as a reproducible development pipeline and includes the following steps:
+
+1. **Data Loading**: Imports the raw sensor dataset.
+2. **Data Cleaning and Preprocessing**:
+   - Handling of missing values
+   - Feature normalization/scaling
+3. **Exploratory Data Analysis**:
+   - Correlation heatmaps
+   - Distribution plots of features
+4. **Class Balancing**: Application of techniques like SMOTE or undersampling to address class imbalance.
+5. **Feature Selection**: Based on correlation and importance metrics.
+6. **Model Training**:
+   - Logistic Regression
+   - Support Vector Machine (SVM)
+   - Random Forest
+7. **Model Evaluation**:
+   - Confusion matrix
+   - Classification report
+   - ROC AUC curves
+8. **Best Model Selection**: Based on class 1 recall performance.
+9. **Model Export**: Saves the trained model and scaler using `joblib`.
+
+The notebook can be executed independently to reproduce all modeling steps and final artifacts.
+
 
 ## 🛠️ Libraries Used
 
@@ -86,7 +111,6 @@ SensorGuard/
 - `joblib` for model persistence
 - `streamlit` for interactive front-end
 
----
 
 ## 🚀 Running the App
 
@@ -111,26 +135,40 @@ cd src
 streamlit run app.py
 ```
 
----
 
 ## ⚙️ Streamlit Application Features
 
+The Streamlit interface offers a simple and interactive way to use the trained model for failure prediction. It supports both single-record predictions and batch processing.
+
 ### 🔎 Manual Input
 
-- Predict failures by entering 3 key parameters
+- Input three key machine parameters manually:
+  - `Operational_Hours`
+  - `Temperature_C`
+  - `Vibration_mms`
+- Instantly receive a prediction on whether a failure is likely to occur within the next 7 days.
+- Visual feedback and explanations for the prediction provided (e.g., feature contributions).
 
 ### 📂 CSV Batch Prediction
 
-- Upload a `.csv` file with multiple records
-- View predictions and a summary plot
+- Upload a `.csv` file containing multiple sensor readings.
+- The system processes all rows and returns:
+  - Individual predictions
+  - Summary statistics
+  - Downloadable results file (`.csv`)
+  - Visual overview of batch predictions (e.g., failure distribution plot)
 
-### 🧪 Model
+### 🧪 Underlying Model
 
-- Tuned SVM with probability calibration and threshold analysis
-- Optimized via GridSearchCV (C, kernel)
-- Designed for real-time scoring and easy deployment
+- Uses a **Support Vector Machine (SVM)** classifier:
+  - Hyperparameters tuned via **GridSearchCV**.
+  - **Probability calibration** applied to support threshold tuning.
+  - Threshold selected to **maximize recall for the failure class**, minimizing the risk of missing a potential failure.
+- Optimized for:
+  - Real-time predictions
+  - Fast inference speed
+  - Deployment readiness (via `.pkl` export)
 
----
 
 ## 📄 License
 
