@@ -102,6 +102,7 @@ This Jupyter notebook contains the complete machine learning workflow, from raw 
 
 The notebook can be executed independently to reproduce all modeling steps and final artifacts.
 
+⚠️ Warning: This notebook is written in French 🇫🇷
 
 ## 🛠️ Libraries Used
 
